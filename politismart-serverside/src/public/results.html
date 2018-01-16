@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>A user friendly data mangement app for pediactrician practices</title>
+	<meta charset="UTF-8">
+  	<meta name="description" content="User friendly data mangement for pediactrician practices">
+  	<meta name="keywords" content="Pediatrics, patient data management, medical practice, vaccines">
+  	<meta name="author" content="Stav Davis">
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  	<!-- fonts: -->
+    <link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  	<!-- css reset: -->
+	<link rel="stylesheet" type="text/css" href="https://meyerweb.com/eric/tools/css/reset/reset.css">
+	<!-- styles: -->
+	<link rel="stylesheet" type="text/css" href="results.css"> 
+</head>
+
+<body>
+	<div class="upper-bar">
+		<h1 class="business-name-header">Larchmont Pediatrics</h1>
+		<div class="logged-in-as"></div><button class="log-out-button">Log out</button>	
+	</div>
+
+	<div class="data-selections">
+		<div class="select-child">
+			<div>1. Select one of your children:</div>
+			<div class="patient-buttons"></div>	
+			<div class="add-new-child">
+				<div class="or-line">Or:</div>
+				<button class="service-btn add-new-child-button">Add a child</button>
+				<div class="add-child-box" style="display: none;"> <!-- "hidden" will be toggeled via js -->
+				    <form class="add-child-form">
+				        <input class="child-first-name-input" type="text" name="childFirstName" placeholder="First name" required="required">
+				        <input class="child-last-name-input" type="text" name="childLastName" placeholder="Last name" required="required">
+			        	<select class="child-gender-input" name="childGender" form="add-child-form" required="required">
+							<option value="" disabled selected hidden>Select gender</option>
+							<option value="male">Male</option>
+							<option value="female">Female</option>
+						</select>
+				        <input class="child-dob-input" type="date" name="childDob" placeholder="Date of Birth:-" required="required">
+				        <input class="new-child-submit-button" type="submit" value="Add my child!">
+				    </form> 					
+				</div> 
+			</div>		
+		</div>
+
+		<div class="select-data">
+			<div class="select-child-title">2. Select a service:</div>
+			<button class="service-btn srvc-btn-brdr-toggle vaccines-button">Get Vaccine History</button>
+			<button class="service-btn srvc-btn-brdr-toggle appointment-button">View Past & Future Visits</button>
+<!-- 		<button>Handouts & Documents</button> -->
+<!-- 		<button>Bills (coming soon)</button> -->
+			<button class="service-btn srvc-btn-brdr-toggle patient-info-button">View Patient Information</button>
+		</div>
+
+		<div class="review-results-title">3. Review results:</div>
+		<div class="results-display" style="display: block;"></div>
+		
+	</div>
+
+	<script src="https://code.jquery.com/jquery.min.js"></script>
+	<script type="text/javascript" src="results.js"></script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>A user friendly data mangement app for pediactrician practices</title>
+	<meta charset="UTF-8">
+  	<meta name="description" content="User friendly data mangement for pediactrician practices">
+  	<meta name="keywords" content="Pediatrics, patient data management, medical practice, vaccines">
+  	<meta name="author" content="Stav Davis">
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  	<!-- fonts: -->
+    <link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  	<!-- css reset: -->
+	<link rel="stylesheet" type="text/css" href="https://meyerweb.com/eric/tools/css/reset/reset.css">
+	<!-- styles: -->
+	<link rel="stylesheet" type="text/css" href="adminDashboard.css"> 
+</head>
+
+<body>
+	<div class="upper-bar">
+		<h1 class="business-name-header">Larchmont Pediatrics</h1>
+		<div class="logged-in-as"></div><button class="log-out-button">Log out</button>	
+	</div>
+
+	<div class="data-selections">
+		<div class="select-child">
+			<div>1. Select a child patient:</div>
+			<div class="patient-buttons"></div>	
+		</div>
+
+		<div class="select-data">
+			<div class="select-child-title">2. Select a service:</div>
+			<button class="service-btn srvc-btn-brdr-toggle vaccines-button">Get Vaccine History</button>
+			<button class="service-btn srvc-btn-brdr-toggle appointment-button">View Past & Future Visits</button>
+			<button class="service-btn srvc-btn-brdr-toggle patient-info-button">View Patient Information</button>
+			<br>
+			<button class="service-btn srvc-btn-brdr-toggle action-button patient-vaccine-add">Add Vaccine</button>
+			<button class="service-btn srvc-btn-brdr-toggle action-button patient-appointment-add">Add Appointment</button>
+			<button class="service-btn srvc-btn-brdr-toggle inactive action-button patient-info-add">Add Patient</button>
+			<br>
+			<button class="service-btn srvc-btn-brdr-toggle inactive action-button patient-vaccine-delete">Delete Vaccine</button>
+			<button class="service-btn srvc-btn-brdr-toggle inactive action-button patient-appointment-delete">Delete Appointment</button>
+			<button class="service-btn srvc-btn-brdr-toggle inactive action-button patient-info-delete">Delete Patient</button>
+			<br>
+			<button class="service-btn srvc-btn-brdr-toggle inactive action-button patient-vaccine-edit">Edit Vaccine</button>
+			<button class="service-btn srvc-btn-brdr-toggle inactive action-button patient-appointment-edit">Edit Appointment</button>
+			<button class="service-btn srvc-btn-brdr-toggle inactive action-button patient-info-edit">Edit Patient</button>
+			<br>
+		</div>
+
+		<!-- Hidden submission forms: -->
+		<!-- ADD VACCINE FORM (HIDDEN): -->
+		<div class="action-form-box add-vaccine-box" style="display: none;"> <!-- "hidden" will be toggeled via js -->
+		    <form class="add-vaccine-form">
+		        <input class="vaccine-name-input" type="text" name="vaccineName" placeholder="Vaccine name" required="required">
+		       	<select class="vaccine-status-input" name="vaccineStatus" form="add-vaccine-form" required="required">
+					<option value="" disabled selected hidden>Select status</option>
+					<option value="Done">Done</option>
+					<option value="Not done yet">Not done yet</option>
+				</select>
+		        <input class="related-diseases-input" type="text" name="relatedDiseases" placeholder="Related diseases" required="required">
+		        <input class="vaccine-due-date" type="date" name="dueDate" placeholder="Due date:-" required="required">
+		        <input class="vaccine-done-date" type="date" name="doneDate" placeholder="Done date:-" required="required">
+		        <input class="new-vaccine-submit-button" type="submit" value="Submit">
+		    </form> 					
+		</div> 
+
+		<div class="action-form-box add-appointment-box" style="display: none;"> <!-- "hidden" will be toggeled via js -->
+		    <form class="add-appointment-form">
+		        <input class="appointment-date-input" type="date" name="date" placeholder="Date:-" required="required">
+		        <input class="appointment-reason-input" type="text" name="reason" placeholder="Reason" required="required">
+		        <input class="appointment-summary-input" type="text" name="summary" placeholder="Summary" required="required">
+		        <input class="new-appointment-submit-button" type="submit" value="Submit">
+		    </form> 					
+		</div>
+
+		<div class="action-form add-patient-box" style="display: block;"></div>
+		<div class="action-form delete-vaccine-box" style="display: block;"></div>
+		<div class="action-form delete-appointment-box" style="display: block;"></div>
+		<div class="action-form delete-patient-box" style="display: block;"></div>
+		<div class="action-form edit-vaccine-box" style="display: block;"></div>
+		<div class="action-form edit-appointment-box" style="display: block;"></div>
+		<div class="action-form edit-patient-box" style="display: block;"></div>
+	</div>
+
+	<div class="results-display" style="display: block;"></div>
+
+	<script src="https://code.jquery.com/jquery.min.js"></script>
+	<script type="text/javascript" src="adminDashboard.js"></script>
+</body>
+</html>
