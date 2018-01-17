@@ -11,15 +11,26 @@ mongoose.Promise = global.Promise;
 const {PORT, DATABASE_URL} = require('./config');
 
 app.use(morgan('common'));
-app.use(express.static('./src/public')); //to serve static index.html file
+app.use(express.static('./src/public')); //to serve static index.html file. Only used if server side has public facing pages
 app.use(bodyParser.json());
 
 ///////LOGIN PROCESS MANAGEMENT - START
+/*   //UNCOMMENT THIS BLOCK TO RE-ENABLE JWT PROTECTIONS. ALSO UNCOMMENT WHAT USED TO BE LINE 49 BELOW (MIDDLEWARE FOR ENDPOINT)
 require('dotenv').config(); //need this for the local .env file
 const passport = require('passport');
 
 const { router: authRouter, localStrategy, jwtStrategy } = require('./src/auth');
 const { router: usersRouter } = require('./src/users');
+
+passport.use(localStrategy);
+passport.use(jwtStrategy);
+
+app.use('/api/users/', usersRouter);
+app.use('/api/auth/', authRouter);
+
+const jwtAuth = passport.authenticate('jwt', { session: false }); //This is used for all endpoint (routed) below
+*/
+///////LOGIN PROCESS MANAGEMENT - END
 
 // CORS
 app.use(function (req, res, next) {
@@ -32,25 +43,20 @@ app.use(function (req, res, next) {
   next();
 });
 
-passport.use(localStrategy);
-passport.use(jwtStrategy);
-
-app.use('/api/users/', usersRouter);
-app.use('/api/auth/', authRouter);
-
-const jwtAuth = passport.authenticate('jwt', { session: false }); //This is used for all endpoint (routed) below
-///////LOGIN PROCESS MANAGEMENT - END
-
-
 ///////ENDPOINT ROUTING MANAGEMENT SECTION - START
-const patientsRouter = require('./src/routers/patientsRouter');
-app.use('/patients', jwtAuth, patientsRouter);
+//Initial version only has 100 US senators.
+const senateRouter = require('./src/routers/senateRouter');
+// app.use('/senators', jwtAuth, senateRouter);    //SWITCH THIS LINE AND NEXT TO RE-ENABLE JWT PROTECTION FOR THIS ENDPOINT!!!!!
+app.use('/senators', senateRouter);
 
-const vaccinesRouter = require('./src/routers/vaccinesRouter');
-app.use('/vaccines', jwtAuth, vaccinesRouter);
 
-const appointmentsRouter = require('./src/routers/appointmentsRouter');
-app.use('/appointments', jwtAuth, appointmentsRouter);
+//Future versions will have other lawmaker routers, starting with congress reps
+//const congressRepsRouter = require('./src/routers/congressRepsRouter');
+//app.use('/congressReps', jwtAuth, congressRepsRouter);
+
+////Future versions will have other lawmakers, starting with congress reps
+//const congressRepsRouter = require('./src/routers/congressRepsRouter');
+//app.use('/congressReps', jwtAuth, congressRepsRouter);
 
 ///////ENDPOINT ROUTING MANAGEMENT SECTION- END
 
@@ -93,11 +99,11 @@ function closeServer() {
   });
 }
 
+///////CREATING RUNSERVER AND CLOSESERVER (FOR TESTING) SECTION - START
 // if server.js is called directly (aka, with `node server.js`), this block
 // runs. but we also export the runServer command so other code (for instance, test code) can start the server as needed.
 if (require.main === module) {
   runServer().catch(err => console.error(err));
 };
-///////CREATING RUNSERVER AND CLOSESERVER (FOR TESTING) SECTION - START
 
 module.exports = {app, runServer, closeServer};

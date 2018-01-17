@@ -3,20 +3,21 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 const mongoose = require('mongoose');
-const Appointment = require('../models/appointment');
+const Senator = require('../models/senator');  
 
 //Mongoose internally uses a promise-like object,
 // but its better to make Mongoose use built in es6 promises
 mongoose.Promise = global.Promise;
 
-// GET requests to /vaccines
+// GET requests to /senators
+// (1) General get request - gets all senators in the database
 router.get('/', jsonParser, (req, res) => {
-  Appointment
+  Senator
     .find()
-    .then(appointments => {
+    .then(senators => {
       res.json({
-        appointments: appointments.map(
-          (appointment) => appointment.apiRepr())
+        senators: senators.map(
+          (senator) => senator.apiRepr())
       });
     })
     .catch(
@@ -26,14 +27,38 @@ router.get('/', jsonParser, (req, res) => {
     });
 });
 
-// can also request by patientId
-router.get('/byPatient/:patientId', (req, res) => {
-  Appointment
-    .find({patientId: req.params.patientId})
-    .then(appointments => {
+//(2) An endpoint that allows for a request such as: /senators/standsFor?gunControl=100&proLife=100
+router.get('/standsFor', (req, res) => {
+    const filters = {};
+    //ADD ANY NEW SEARCHABLE FIELDS HERE:
+    const queryableFields = ['gunControl', 'proLife', 'gayMarriage', 'cleanEnergy', 'smallGovernment']; 
+    queryableFields.forEach(field => {
+        if (req.query[field]) {
+            filters[field] = req.query[field];
+        }
+    });
+    Senator
+        .find(filters)
+        .then(senators => {
+          res.json({
+            senators: senators.map(
+              (senator) => senator.apiRepr())
+          });
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).json({message: 'Internal server error'})
+        });
+});
+
+// (3) An endpoint that allows for a request such as: /senators/party/dem
+router.get('/party/:party', (req, res) => {
+  Senator
+    .find({party: req.params.party})
+    .then(senators => {
       res.json({
-        appointments: appointments.map(
-          (appointment) => appointment.apiRepr())
+        senators: senators.map(
+          (senator) => senator.apiRepr())
       });
     })
     .catch(err => {
@@ -44,7 +69,18 @@ router.get('/byPatient/:patientId', (req, res) => {
 
 //ADDING A POST ENDPOINT
 router.post('/', jsonParser, (req, res) => {
-  const requiredFields = ['patientName', 'patientId', 'date', 'reason', 'summary'];
+  const requiredFields = [
+    'name', 
+    'active',
+    'state', 
+    'party', 
+    'effectiveness', 
+    'gunControl', 
+    'proLife', 
+    'gayMarriage', 
+    'cleanEnergy', 
+    'smallGovernment'
+  ];
   for (let i=0; i<requiredFields.length; i++) {
     const field = requiredFields[i];
     if (!(field in req.body)) {
@@ -53,15 +89,20 @@ router.post('/', jsonParser, (req, res) => {
       return res.status(400).send(message);
     }
   }
-  Appointment
+  Senator
     .create({
-      patientName: req.body.patientName,
-      patientId: req.body.patientId,
-      date: req.body.date,
-      reason: req.body.reason,
-      summary: req.body.summary})
+      name: req.body.name,
+      active: req.body.active,
+      state: req.body.state,
+      party: req.body.party,
+      effectiveness: req.body.effectiveness,
+      gunControl: req.body.gunControl,
+      proLife: req.body.proLife,
+      gayMarriage: req.body.gayMarriage,
+      cleanEnergy: req.body.cleanEnergy,
+      smallGovernment: req.body.smallGovernment})
     .then(
-      appointment => res.status(201).json(appointment.apiRepr()))
+      senator => res.status(201).json(senator.apiRepr()))
     .catch(err => {
       console.error(err);
       res.status(500).json({message: 'Internal server error'});
@@ -82,23 +123,32 @@ router.put('/:id', jsonParser, (req, res) => {
   // if the user sent over any of the updatableFields, we udpate those values
   // in document
   const toUpdate = {};
-  const updateableFields = ['date', 'reason', 'summary'];
-
+  const updateableFields = [
+    'name', 
+    'active', 
+    'state', 
+    'party', 
+    'effectiveness', 
+    'gunControl', 
+    'proLife', 
+    'gayMarriage', 
+    'cleanEnergy', 
+    'smallGovernment'];
   updateableFields.forEach(field => {
     if (field in req.body) {
       toUpdate[field] = req.body[field];
     }
   });
-  Appointment
+  Senator
     // all key/value pairs in toUpdate will be updated -- that's what `$set` does
     .findByIdAndUpdate(req.params.id, {$set: toUpdate})
-    .then(vaccine => res.status(204).end())
+    .then(senator => res.status(204).end())
     .catch(err => res.status(500).json({message: 'Internal server error'}));
 });
 
 //ADDING DELETE ENDPOINT
 router.delete('/:id', (req, res) => {
-  Appointment
+  Senator
     .findByIdAndRemove(req.params.id)
     .then(vaccine => res.status(204).end())
     .catch(err => res.status(500).json({message: 'Internal server error'}));
