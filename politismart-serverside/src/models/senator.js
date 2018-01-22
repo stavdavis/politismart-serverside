@@ -3,10 +3,11 @@ const mongoose = require('mongoose');
 // this is our schema to represent a senator
 const schema = mongoose.Schema({
   name: {type: String, required: true},
+  image: {type: String, required: true},//a link to an image (225x275)
   active: {type: Boolean, required: true}, // true or false
   state: {type: String, required: true},
   party: {type: String, required: true},
-  effectiveness: {type: Number, required: true}, //0-100 scale; will be used at a later stage
+  impact: {type: Number, required: true}, //0-100 scale; refers to impact of contribution (safe/risky senate seat) - will be used for sorting results
   //All the following fields have scales of 0 to 100; 50=neutral/unknown; 100=fully pro; 0=fully anti
   gunControl: {type: Number, required: true},  
   proLife: {type: Number, required: true},
@@ -20,10 +21,11 @@ schema.methods.apiRepr = function() {
   return {
     id: this._id,
     name: this.name,
+    image: this.image,
     active: this.active,
     state: this.state,
     party: this.party,
-    effectiveness: this.effectiveness,
+    impact: this.impact,
     gunControl: this.gunControl,
     proLife: this.proLife,
     gayMarriage: this.gayMarriage,

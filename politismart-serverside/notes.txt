@@ -1,0 +1,53 @@
+To add a new senator via Postman:
+POST request to /senators
+{
+  "name": "Kamala Harris",
+  "active": "True",
+  "state": "CA",
+  "party": "Dem",
+  "effectiveness": 90,
+  "gunControl": 100,  
+  "proLife": 0,
+  "gayMarriage": 100,
+  "cleanEnergy": 100,
+  "smallGovernment": 0
+}
+
+To add a new field to a senator via Postman:
+PUT request to /senators/:id
+{
+  "id": "5a5ef00b208982b42895c523",
+  "active": "True"
+}
+
+
+To add a new senator via mongo:
+var tedCruz= {
+  name: "Ted Cruz",
+  active: True,
+  state: "TX",
+  party: "Rep",
+  effectiveness: 90,
+  gunControl: 0,  
+  proLife: 100,
+  gayMarriage: 0,
+  cleanEnergy: 0,
+  smallGovernment: 100
+}
+db.senators.insertOne(tedCruz);
+
+
+var coryBooker = {
+  name: "Cory Booker",
+  active: True,
+  state: "NJ",
+  party: "Dem",
+  effectiveness: 90,
+  gunControl: 100,  
+  proLife: 0,
+  gayMarriage: 100,
+  cleanEnergy: 0,
+  smallGovernment: 100
+}
+db.senators.insertOne(coryBooker);
+

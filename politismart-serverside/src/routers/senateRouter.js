@@ -34,11 +34,18 @@ router.get('/standsFor', (req, res) => {
     const queryableFields = ['gunControl', 'proLife', 'gayMarriage', 'cleanEnergy', 'smallGovernment']; 
     queryableFields.forEach(field => {
         if (req.query[field]) {
-            filters[field] = req.query[field];
+          //50=user doesn't care, so return all. Ex: gunControl=50 --> returns all senators with score > -1
+          if (req.query[field] == 50) {
+            filters[field] = {$gt : -1} //if user doesn't care about this metric (=50) then return all results
+          }
+          else {filters[field] = req.query[field]}
         }
     });
+    console.log(req);
+    console.log(filters);
     Senator
         .find(filters)
+        .sort({impact: -1})//+1=ascending order; -1=descending order
         .then(senators => {
           res.json({
             senators: senators.map(
