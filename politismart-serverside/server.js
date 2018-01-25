@@ -15,6 +15,7 @@ app.use(express.static('./src/public')); //to serve static index.html file. Only
 app.use(bodyParser.json());
 
 // CORS
+//Option 1 for CORS handling via middleware:
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
@@ -24,6 +25,15 @@ app.use(function (req, res, next) {
   }
   next();
 });
+
+//Option 2 for CORS handling  via middleware:
+//const cors = require('cors');
+//const {CLIENT_ORIGIN} = require('./config');
+// app.use(
+//     cors({
+//         origin: CLIENT_ORIGIN
+//     })
+// );
 
 ///////ENDPOINT ROUTING MANAGEMENT SECTION - START
 //Initial version only has 100 US senators.
