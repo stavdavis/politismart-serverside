@@ -7,7 +7,7 @@ const schema = mongoose.Schema({
   active: {type: Boolean, required: true}, // true or false
   state: {type: String, required: true},
   party: {type: String, required: true},
-  impact: {type: Number, required: true}, //0-100 scale; refers to impact of contribution (safe/risky senate seat) - will be used for sorting results
+  impact: {type: Number, required: true}, //0-100 scale; refers to impact of uaer's donation/contribution (safe/risky senate seat) - used for sorting results
   //All the following fields have scales of 0 to 100; 50=neutral/unknown; 100=fully pro; 0=fully anti
   gunControl: {type: Number, required: true},  
   proLife: {type: Number, required: true},

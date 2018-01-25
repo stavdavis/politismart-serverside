@@ -14,24 +14,6 @@ app.use(morgan('common'));
 app.use(express.static('./src/public')); //to serve static index.html file. Only used if server side has public facing pages
 app.use(bodyParser.json());
 
-///////LOGIN PROCESS MANAGEMENT - START
-/*   //UNCOMMENT THIS BLOCK TO RE-ENABLE JWT PROTECTIONS. ALSO UNCOMMENT WHAT USED TO BE LINE 49 BELOW (MIDDLEWARE FOR ENDPOINT)
-require('dotenv').config(); //need this for the local .env file
-const passport = require('passport');
-
-const { router: authRouter, localStrategy, jwtStrategy } = require('./src/auth');
-const { router: usersRouter } = require('./src/users');
-
-passport.use(localStrategy);
-passport.use(jwtStrategy);
-
-app.use('/api/users/', usersRouter);
-app.use('/api/auth/', authRouter);
-
-const jwtAuth = passport.authenticate('jwt', { session: false }); //This is used for all endpoint (routed) below
-*/
-///////LOGIN PROCESS MANAGEMENT - END
-
 // CORS
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
@@ -47,15 +29,7 @@ app.use(function (req, res, next) {
 //Initial version only has 100 US senators.
 const senateRouter = require('./src/routers/senateRouter');
 app.use('/senators', senateRouter);
-// app.use('/senators', jwtAuth, senateRouter);    //SWITCH THIS LINE AND NEXT TO RE-ENABLE JWT PROTECTION FOR THIS ENDPOINT!!!!!
-
-//Future versions will have other lawmaker routers, starting with congress reps
-//const congressRepsRouter = require('./src/routers/congressRepsRouter');
-//app.use('/congressReps', jwtAuth, congressRepsRouter);
-
-////Future versions will have other lawmakers, starting with congress reps
-//const congressRepsRouter = require('./src/routers/congressRepsRouter');
-//app.use('/congressReps', jwtAuth, congressRepsRouter);
+// app.use('/senators', jwtAuth, senateRouter);    //SWITCH THIS LINE AND PREVIOUS TO RE-ENABLE JWT PROTECTION FOR THIS ENDPOINT!!!!!
 
 ///////ENDPOINT ROUTING MANAGEMENT SECTION- END
 
@@ -98,8 +72,27 @@ function closeServer() {
   });
 }
 
-///////CREATING RUNSERVER AND CLOSESERVER (FOR TESTING) SECTION - START
+///////CREATING RUNSERVER AND CLOSESERVER (FOR TESTING) SECTION - END
 // if server.js is called directly (aka, with `node server.js`), this block
+
+///////LOGIN PROCESS MANAGEMENT - START
+/*   //UNCOMMENT THIS BLOCK TO RE-ENABLE JWT PROTECTIONS. ALSO UNCOMMENT WHAT USED TO BE LINE 49 BELOW (MIDDLEWARE FOR ENDPOINT)
+require('dotenv').config(); //need this for the local .env file
+const passport = require('passport');
+
+const { router: authRouter, localStrategy, jwtStrategy } = require('./src/auth');
+const { router: usersRouter } = require('./src/users');
+
+passport.use(localStrategy);
+passport.use(jwtStrategy);
+
+app.use('/api/users/', usersRouter);
+app.use('/api/auth/', authRouter);
+
+const jwtAuth = passport.authenticate('jwt', { session: false }); //This is used for all endpoint (routed) below
+*/
+///////LOGIN PROCESS MANAGEMENT - END
+
 // runs. but we also export the runServer command so other code (for instance, test code) can start the server as needed.
 if (require.main === module) {
   runServer().catch(err => console.error(err));
