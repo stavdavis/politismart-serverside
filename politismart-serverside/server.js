@@ -46,9 +46,8 @@ app.use(function (req, res, next) {
 ///////ENDPOINT ROUTING MANAGEMENT SECTION - START
 //Initial version only has 100 US senators.
 const senateRouter = require('./src/routers/senateRouter');
-// app.use('/senators', jwtAuth, senateRouter);    //SWITCH THIS LINE AND NEXT TO RE-ENABLE JWT PROTECTION FOR THIS ENDPOINT!!!!!
 app.use('/senators', senateRouter);
-
+// app.use('/senators', jwtAuth, senateRouter);    //SWITCH THIS LINE AND NEXT TO RE-ENABLE JWT PROTECTION FOR THIS ENDPOINT!!!!!
 
 //Future versions will have other lawmaker routers, starting with congress reps
 //const congressRepsRouter = require('./src/routers/congressRepsRouter');
