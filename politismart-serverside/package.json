@@ -1,5 +1,5 @@
 {
-  "name": "pediatrician-app",
+  "name": "politismart-app",
   "version": "1.0.0",
   "description": "The server side of the Politismart app",
   "main": "index.js",

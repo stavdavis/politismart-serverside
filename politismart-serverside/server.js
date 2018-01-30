@@ -1,4 +1,13 @@
 'use strict';
+
+//Reqs for login/registration/JWTs:////////////////////////////////////////////
+require('dotenv').config(); //need this for the local .env file
+const passport = require('passport');
+// Using destructuring assignment with renaming so the two "router" variables (users and auth) have different names:
+const { router: usersRouter } = require('./src/users');
+const { router: authRouter, localStrategy, jwtStrategy } = require('./src/auth');
+
+//All other server-side reqs://////////////////////////////////////////////////
 const express = require('express');
 const morgan = require('morgan');
 const app = express();
@@ -8,14 +17,13 @@ const mongoose = require('mongoose');
 //Mongoose internally uses a promise-like object, but its better to make it use ES6 promises
 mongoose.Promise = global.Promise;
 
-const {PORT, DATABASE_URL} = require('./config');
+const { PORT, DATABASE_URL } = require('./config');
 
 app.use(morgan('common'));
-app.use(express.static('./src/public')); //to serve static index.html file. Only used if server side has public facing pages
+// app.use(express.static('./src/public')); //to serve static index.html file. Only used if server side has public facing pages
 app.use(bodyParser.json());
 
-// CORS
-//Option 1 for CORS handling via middleware:
+// CORS handling via middleware: /////////////////////////////////////////////
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
@@ -26,24 +34,28 @@ app.use(function (req, res, next) {
   next();
 });
 
-//Option 2 for CORS handling  via middleware:
-//const cors = require('cors');
-//const {CLIENT_ORIGIN} = require('./config');
-// app.use(
-//     cors({
-//         origin: CLIENT_ORIGIN
-//     })
-// );
+//LOGIN/REGISTER PROCESS MANAGEMENT - START /////////////////////////////////////////////
+passport.use(localStrategy);
+passport.use(jwtStrategy);
 
-///////ENDPOINT ROUTING MANAGEMENT SECTION - START
+app.use('/users/', usersRouter);
+app.use('/auth/', authRouter);
+
+const jwtAuth = passport.authenticate('jwt', { session: false }); //this is used for all protected endpoints below
+
+///////ENDPOINT ROUTING MANAGEMENT SECTION - START /////////////////////////////////////
 //Initial version only has 100 US senators.
-const senateRouter = require('./src/routers/senateRouter');
+//This endpoint is not protected initially. To make it protected - replace with commented line below (adding jwtAuth)
+const senateRouter = require('./src/senators/senateRouter');
 app.use('/senators', senateRouter);
 // app.use('/senators', jwtAuth, senateRouter);    //SWITCH THIS LINE AND PREVIOUS TO RE-ENABLE JWT PROTECTION FOR THIS ENDPOINT!!!!!
 
-///////ENDPOINT ROUTING MANAGEMENT SECTION- END
+app.use('*', (req, res) => {
+  return res.status(404).json({ message: 'Not Found' });
+});
+///////ENDPOINT ROUTING MANAGEMENT SECTION- END ////////////////////////////////////////
 
-///////CREATING RUNSERVER AND CLOSESERVER (FOR TESTING) SECTION - START
+///////CREATING RUNSERVER AND CLOSESERVER (FOR TESTING) SECTION - START //////////////////////
 // closeServer needs a server object (assigned in `runServer`)
 let server;
 
@@ -81,31 +93,10 @@ function closeServer() {
      });
   });
 }
+//CREATING RUNSERVER AND CLOSESERVER (FOR TESTING) SECTION - END //////////////////////
 
-///////CREATING RUNSERVER AND CLOSESERVER (FOR TESTING) SECTION - END
-// if server.js is called directly (aka, with `node server.js`), this block
-
-///////LOGIN PROCESS MANAGEMENT - START
-/*   //UNCOMMENT THIS BLOCK TO RE-ENABLE JWT PROTECTIONS. ALSO UNCOMMENT WHAT USED TO BE LINE 49 BELOW (MIDDLEWARE FOR ENDPOINT)
-require('dotenv').config(); //need this for the local .env file
-const passport = require('passport');
-
-const { router: authRouter, localStrategy, jwtStrategy } = require('./src/auth');
-const { router: usersRouter } = require('./src/users');
-
-passport.use(localStrategy);
-passport.use(jwtStrategy);
-
-app.use('/api/users/', usersRouter);
-app.use('/api/auth/', authRouter);
-
-const jwtAuth = passport.authenticate('jwt', { session: false }); //This is used for all endpoint (routed) below
-*/
-///////LOGIN PROCESS MANAGEMENT - END
-
-// runs. but we also export the runServer command so other code (for instance, test code) can start the server as needed.
 if (require.main === module) {
   runServer().catch(err => console.error(err));
-};
+}
 
-module.exports = {app, runServer, closeServer};
+module.exports = { app, runServer, closeServer }

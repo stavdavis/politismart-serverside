@@ -3,7 +3,7 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 const mongoose = require('mongoose');
-const Senator = require('../models/senator');  
+const Senator = require('./senatorModel');  
 
 //Mongoose internally uses a promise-like object,
 // but its better to make Mongoose use built in es6 promises

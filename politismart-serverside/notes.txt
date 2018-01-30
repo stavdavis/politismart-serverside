@@ -1,0 +1,17 @@
+TODO:
+- DONE - Fix Tina Smith, Doug Jones - add photos
+- DONE - Shorten Cortez Masto and ...'s name
+- DONE - Change signup button color
+- DONE - Add big padding at bottom of signup section
+- DONE - Change slider button color
+- DONE - Add margin under mobile menu lines
+- DONE - Figure out environment variables in Netlify
+- DONE - Center cards on screen
+- DONE - Remove all states - connect all to redux
+- DONE - Add tests to frontend
+
+- Readme file
+- JWTs and login?
+
+- Why does line 46 is reducers have square brackets around the key?
+- How long to implement JWT login?
