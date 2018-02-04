@@ -24,6 +24,7 @@ app.use(morgan('common'));
 app.use(bodyParser.json());
 
 // CORS handling via middleware: /////////////////////////////////////////////
+//IMPORTANT: App with throw a CORS error if JWT_SECRET is not defined in env-vars (on Heroku for example) - so make sure it's there.
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
