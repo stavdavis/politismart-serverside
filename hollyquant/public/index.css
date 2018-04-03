@@ -1,0 +1,11 @@
+body {
+	background: url('placeholder.JPG') no-repeat center center fixed;
+	background-size: cover;
+}
+
+@media screen and (max-width: 480px) {
+    body {
+        background: url('placeholder_mobile.jpg') no-repeat top center fixed;
+        background-size: 480px 850px;
+    }
+}
